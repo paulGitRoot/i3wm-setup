@@ -2,10 +2,10 @@
 
 This is my personalized **i3 window manager** setup including:
 
-* i3lock-fancy lockscreen
+* Betterlockscreen lockscreen (works after sleep/hibernation)
 * i3blocks status bar
 * Picom compositor
-* Wallpapers and screenshots setup for lockscreen
+* Wallpapers setup for lockscreen and desktop
 * Custom keybindings and utilities
 
 ---
@@ -21,7 +21,7 @@ libxcb1-dev libxcb-image0-dev libxcb-util0-dev libxcb-xkb-dev \
 libxkbcommon-dev libxkbcommon-x11-dev libxcb-randr0-dev \
 libxcb-xinerama0-dev libxcb-xrm-dev libxcb-cursor-dev \
 libpam0g-dev libev-dev libx11-dev libx11-xcb-dev libjpeg-dev \
-feh imagemagick scrot i3blocks i3lock xss-lock picom
+feh imagemagick scrot i3blocks xss-lock picom
 ```
 
 > ⚠️ `scrot` is required for screenshots (lockscreen blur/dim)
@@ -29,65 +29,40 @@ feh imagemagick scrot i3blocks i3lock xss-lock picom
 
 ---
 
-## 🔐 Lock Screen Setup (i3lock-fancy)
+## 🔐 Lock Screen Setup (Betterlockscreen)
 
-Clone, build, and install i3lock-color:
-
-```bash
-git clone https://github.com/Raymo111/i3lock-color.git ~/i3lock-color
-cd ~/i3lock-color
-rm -rf build
-./build.sh
-sudo cp build/i3lock /usr/bin/i3lock
-```
-
-Create a lock script at `~/bin/lock.sh`:
+Clone and install Betterlockscreen:
 
 ```bash
-#!/bin/bash
-# Take a screenshot and lock using i3lock-fancy
-SCROT=$(which scrot)
-if [ -x "$SCROT" ]; then
-    TMPIMG="$HOME/.cache/i3lock/screen.png"
-    mkdir -p "$(dirname "$TMPIMG")"
-    $SCROT -q 100 "$TMPIMG"
-    i3lock-fancy --screen "$TMPIMG"
-else
-    i3lock-fancy
-fi
+git clone https://github.com/betterlockscreen/betterlockscreen.git ~/betterlockscreen
+cd ~/betterlockscreen
+./install.sh user
 ```
 
-Make it executable:
+> ⚠️ Make sure your PATH includes `~/.local/bin`:
 
 ```bash
-mkdir -p ~/bin
-chmod +x ~/bin/lock.sh
+echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.bashrc
+source ~/.bashrc
 ```
 
-Bind it in i3 config for manual lock and hibernation/sleep:
+Set a wallpaper for the lockscreen:
+
+```bash
+betterlockscreen -u ~/Pictures/my-wallpaper.jpg
+```
+
+Enable automatic lock after sleep/hibernation by adding to i3 config:
 
 ```ini
-# Manual lock
-bindsym $mod+l exec --no-startup-id ~/bin/lock.sh
-
 # Lock after sleep/hibernation
-exec --no-startup-id xss-lock -- ~/bin/lock.sh
+exec --no-startup-id xss-lock -- betterlockscreen -l
 ```
 
----
-
-## 🌄 Wallpaper Setup
-
-Set a static wallpaper using `feh`:
+Optionally, add blur/dim effect (if using screenshots):
 
 ```bash
-feh --bg-fill ~/Pictures/my-wallpaper.jpg
-```
-
-Add to i3 config for autostart:
-
-```ini
-exec --no-startup-id feh --bg-fill ~/Pictures/my-wallpaper.jpg
+betterlockscreen -u ~/Pictures/my-wallpaper.jpg --blur 5 --dim 30
 ```
 
 ---
@@ -126,12 +101,12 @@ exec --no-startup-id dex --autostart --environment i3
 
 ## 🔧 Notes
 
-* **i3lock-fancy** is used for lockscreen blur/dim effects.
-* Scrot and Imagemagick are required for the blur/dim.
-* The wallpaper can be changed by updating the path in the `feh` command.
-* This setup works on Ubuntu/Mint-based systems.
+* **Betterlockscreen** replaces i3lock-fancy and automatically locks the screen after sleep/hibernation.
+* Blur and dim effects are optional and require `scrot` and `imagemagick`.
+* Change lockscreen wallpaper by updating the path in the `betterlockscreen -u` command.
 * All other utilities (xss-lock, picom, i3blocks) are automatically started on i3 launch.
+* This setup works on Ubuntu/Mint-based systems.
 
 ---
 
-✅ This README provides all commands to fully replicate my i3wm rice setup.
+✅ This README provides all commands to fully replicate my i3wm rice setup with Betterlockscreen.
