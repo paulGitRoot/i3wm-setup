@@ -1,0 +1,60 @@
+/*PATH nvim ~/.config/gtk-3.0/gtk.css*/
+@import 'colors.css';
+/* =========================
+   NEMO DARK BROWN THEME
+   ========================= */
+
+/* Main window */
+.nemo-window,
+.nemo-window scrolledwindow,
+.nemo-window viewport {
+    background-color: #1F1F1F;
+    color: #D4BE98;
+}
+
+/* Icon view background */
+.nemo-window iconview.view {
+    background-color: #1F1F1F;
+}
+
+/* Folder & file tiles */
+.nemo-window iconview.view .cell {
+    background-color: transparent;
+    color: #D4BE98;
+}
+
+/* Selected folder/file */
+.nemo-window iconview.view .cell:selected,
+.nemo-window iconview.view .cell:selected:focus {
+    background-color: #3A2A2A;
+    color: #FFFFFF;
+    border-radius: 6px;
+}
+
+/* Hover effect */
+.nemo-window iconview.view .cell:hover {
+    background-color: #2A1F1F;
+    border-radius: 6px;
+}
+
+/* List view rows */
+.nemo-window treeview.view {
+    background-color: #1F1F1F;
+    color: #D4BE98;
+}
+
+.nemo-window treeview.view:selected {
+    background-color: #3A2A2A;
+    color: #FFFFFF;
+}
+
+/* Sidebar */
+.nemo-window .sidebar {
+    background-color: #181818;
+}
+
+/* Headerbar */
+.nemo-window headerbar {
+    background-color: #1A1A1A;
+    color: #D4BE98;
+}
