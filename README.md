@@ -1,28 +1,47 @@
 # My i3wm Rice Setup
 
-This is my personalized **i3 window manager** setup including:
+This is my personalized **i3 window manager** setup for Linux Mint / Ubuntu-based systems.
 
-* Betterlockscreen lockscreen (works after sleep/hibernation)
-* i3blocks status bar
-* Picom compositor
-* Wallpapers setup for lockscreen and desktop
-* Custom keybindings and utilities
+It provides a **complete desktop experience** with:
+
+- i3wm window manager
+- Betterlockscreen (locks correctly after sleep/hibernate)
+- i3lock-fancy support
+- i3lock-color (custom colors & effects)
+- i3blocks status bar
+- Picom compositor
+- Brightness, volume, and power management
+- Wallpaper support for desktop & lockscreen
 
 ---
 
-## 💻 Prerequisites
+## 💻 System Requirements
 
-Install all required packages for i3wm, lockscreen, compositor, and utilities:
+- Linux Mint / Ubuntu-based distro
+- X11 session (i3wm)
+- Sudo privileges
+- Internet connection
+
+---
+
+## 📦 Core Dependencies & Utilities
+
+Install all required system packages:
 
 ```bash
-sudo apt update && sudo apt install -y \
+sudo apt update
+sudo apt install -y \
 build-essential git autoconf automake libtool pkg-config \
 libxcb1-dev libxcb-image0-dev libxcb-util0-dev libxcb-xkb-dev \
 libxkbcommon-dev libxkbcommon-x11-dev libxcb-randr0-dev \
 libxcb-xinerama0-dev libxcb-xrm-dev libxcb-cursor-dev \
+libxcb-keysyms1-dev \
 libpam0g-dev libev-dev libx11-dev libx11-xcb-dev libjpeg-dev \
-feh imagemagick scrot i3blocks xss-lock picom
-```
+feh imagemagick scrot \
+i3blocks xss-lock picom \
+nm-applet dex dunst \
+powerdevil kded5 plasma-workspace libnotify-bin \
+brightnessctl
 
 > ⚠️ `scrot` is required for screenshots (lockscreen blur/dim)
 > ⚠️ `imagemagick` is required for image processing
