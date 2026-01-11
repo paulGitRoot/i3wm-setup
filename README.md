@@ -1,131 +1,165 @@
-# My i3wm Rice Setup
+# My i3wm Rice Setup (Full Lock & Power Working Guide)
 
-This is my personalized **i3 window manager** setup for Linux Mint / Ubuntu-based systems.
+This repository documents my **fully working i3wm setup** on Linux Mint / Ubuntu-based systems, including the **exact steps required to make Betterlockscreen actually work**.
 
-It provides a **complete desktop experience** with:
+This is not a theoretical guide — it reflects the **real troubleshooting and fixes** needed after a clean OS install.
 
-- i3wm window manager
-- Betterlockscreen (locks correctly after sleep/hibernate)
-- i3lock-fancy support
-- i3lock-color (custom colors & effects)
+---
+
+## 🧩 What This Setup Includes
+
+- i3 Window Manager
+- Betterlockscreen (works after suspend/hibernate)
+- i3lock-color (required by betterlockscreen)
+- Optional i3lock-fancy support
 - i3blocks status bar
 - Picom compositor
-- Brightness, volume, and power management
-- Wallpaper support for desktop & lockscreen
+- Brightness & volume key support
+- Power management (sleep, lid, brightness)
+- Wallpaper support (desktop + lockscreen)
 
 ---
 
-## 💻 System Requirements
+## 💻 Base System Requirements
 
 - Linux Mint / Ubuntu-based distro
-- X11 session (i3wm)
-- Sudo privileges
-- Internet connection
+- X11 session (**Wayland not supported**)
+- sudo privileges
+- Internet access
 
 ---
 
-## 📦 Core Dependencies & Utilities
+## 📦 STEP 1: Install Base Runtime Packages
 
-Install all required system packages:
+These packages are **required even before touching Betterlockscreen**:
 
 ```bash
 sudo apt update
 sudo apt install -y \
-build-essential git autoconf automake libtool pkg-config \
-libxcb1-dev libxcb-image0-dev libxcb-util0-dev libxcb-xkb-dev \
-libxkbcommon-dev libxkbcommon-x11-dev libxcb-randr0-dev \
-libxcb-xinerama0-dev libxcb-xrm-dev libxcb-cursor-dev \
-libxcb-keysyms1-dev \
-libpam0g-dev libev-dev libx11-dev libx11-xcb-dev libjpeg-dev \
-feh imagemagick scrot \
-i3blocks xss-lock picom \
-nm-applet dex dunst \
+i3lock imagemagick xss-lock \
+feh scrot dunst nm-applet dex \
+i3blocks picom \
 powerdevil kded5 plasma-workspace libnotify-bin \
 brightnessctl
-
-> ⚠️ `scrot` is required for screenshots (lockscreen blur/dim)
-> ⚠️ `imagemagick` is required for image processing
-
----
-
-## 🔐 Lock Screen Setup (Betterlockscreen)
-
-Clone and install Betterlockscreen:
-
-```bash
-git clone https://github.com/betterlockscreen/betterlockscreen.git ~/betterlockscreen
-cd ~/betterlockscreen
-./install.sh user
 ```
+## 🔐 STEP 2: Install Betterlockscreen (Manual Method – WORKING)
 
-> ⚠️ Make sure your PATH includes `~/.local/bin`:
-
+This is the exact method that worked reliably after a clean install.
 ```bash
-echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.bashrc
+cd ~/Downloads
+git clone https://github.com/pavanjadhaw/betterlockscreen.git
+cd betterlockscreen
+sudo make install
+```
+Verify files:
+```bash
+ls -l ~/Downloads/betterlockscreen
+```
+### Manually install the binary (important):
+```bash
+sudo cp ~/Downloads/betterlockscreen/betterlockscreen /usr/local/bin/
+sudo chmod +x /usr/local/bin/betterlockscreen
+```
+### Verify installation:
+```bash
+which betterlockscreen
+# Expected output:
+# /usr/local/bin/betterlockscreen
+```
+### Add /usr/local/bin to PATH permanently:
+```bash
+echo 'export PATH=$PATH:/usr/local/bin' >> ~/.bashrc
 source ~/.bashrc
 ```
-
-Set a wallpaper for the lockscreen:
-
+## 🚨 STEP 3: Why Betterlockscreen Failed Initially
+### Running:
 ```bash
-betterlockscreen -u ~/Pictures/my-wallpaper.jpg
+betterlockscreen -l
 ```
-
-Enable automatic lock after sleep/hibernation by adding to i3 config:
-
-```ini
-# Lock after sleep/hibernation
-exec --no-startup-id xss-lock -- betterlockscreen -l
+## 🧱 STEP 4: Install Build Dependencies for i3lock-color
+```bash
+sudo apt install -y \
+build-essential autoconf pkg-config \
+libx11-dev libxinerama-dev libxrandr-dev \
+libxcb1-dev libxcb-xkb-dev libxcb-randr0-dev \
+libxcb-keysyms1-dev libev-dev libpam0g-dev \
+libcairo2-dev libfontconfig1-dev \
+libxcb-composite0-dev libxcb-image0-dev \
+libxcb-util0-dev libxcb-xrm-dev \
+libx11-xcb-dev libxkbcommon-dev \
+libxkbcommon-x11-dev libxcb-xinerama0-dev \
+libjpeg-dev libgif-dev
 ```
+## 🔨 STEP 5: Build & Install i3lock-color (REQUIRED)
+```bash
+cd ~/Downloads
+git clone https://github.com/Raymo111/i3lock-color.git
+cd i3lock-color
+sudo ./install-i3lock-color.sh
+```
+### Ensure compatibility (important):
+```bash
+sudo ln -s /usr/bin/i3lock /usr/bin/i3lock-color
+```
+### Verify:
+```bash
+i3lock --version
+```
+## 🔐 STEP 6: Final Betterlockscreen Setup
 
-Optionally, add blur/dim effect (if using screenshots):
-
+### Set wallpaper and generate lockscreen assets:
 ```bash
 betterlockscreen -u ~/Pictures/my-wallpaper.jpg --blur 5 --dim 30
 ```
+### Test lockscreen:
+```bash
+betterlockscreen -l
+```
+## 💤 STEP 7: Lock After Suspend / Hibernate (CRITICAL)
+### Add this to your i3 config:
+```bash
+exec --no-startup-id xss-lock --transfer-sleep-lock -- betterlockscreen -l
+```
+### This ensures locking after:
 
----
+Suspend
 
-## 🖥️ Compositor (Picom)
+Hibernate
 
-Picom enables transparency, shadows, and optional blur effects:
-
-```ini
-# Start on i3 launch
+Laptop lid close
+### 🖥️ Picom (Compositor)
+```bash 
 exec_always --no-startup-id picom --config ~/.config/picom/picom.conf --daemon
 ```
-
----
-
-## 📊 i3blocks
-
-Install i3blocks (already included in prerequisites) and autostart:
-
-```ini
-exec --no-startup-id i3blocks
+### 📊 i3blocks Status Bar
+```bash
+bar {
+    status_command i3blocks
+}
 ```
-
-Configure blocks in `~/.config/i3blocks/config`.
-
----
-
-## ⚡ Autostart Utilities
-
-```ini
+### Config file location:
+```bash
+~/.config/i3blocks/config
+```
+## 🔆 STEP 8: Fix Brightness Keys After Reinstall
+### Allow brightness control without password:
+```bash
+sudo visudo
+```
+### Add:
+```bash
+paul ALL=(ALL) NOPASSWD: /usr/bin/brightnessctl
+```
+### i3 keybindings:
+```bash
+bindsym XF86MonBrightnessUp exec --no-startup-id sudo brightnessctl set +10%
+bindsym XF86MonBrightnessDown exec --no-startup-id sudo brightnessctl set 10%-
+```
+### ⚡ Recommended i3 Autostart Services
+```bash
 exec --no-startup-id nm-applet
 exec --no-startup-id dex --autostart --environment i3
+exec --no-startup-id dunst
+exec --no-startup-id xfsettingsd --sm-client-disable
+exec --no-startup-id xfce4-power-manager
 ```
-
----
-
-## 🔧 Notes
-
-* **Betterlockscreen** replaces i3lock-fancy and automatically locks the screen after sleep/hibernation.
-* Blur and dim effects are optional and require `scrot` and `imagemagick`.
-* Change lockscreen wallpaper by updating the path in the `betterlockscreen -u` command.
-* All other utilities (xss-lock, picom, i3blocks) are automatically started on i3 launch.
-* This setup works on Ubuntu/Mint-based systems.
-
----
-
-✅ This README provides all commands to fully replicate my i3wm rice setup with Betterlockscreen.
