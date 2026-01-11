@@ -12,10 +12,20 @@ font pango:Iosevka Bold 12
 # =========================
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id xss-lock --transfer-sleep-lock -- betterlockscreen -l
-#exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock-fancy --nofork
 exec --no-startup-id nm-applet
 # Battery notifications
-exec_always --no-startup-id bash -c "while true; do ~/bin/battery_notify.sh; sleep 60; done"
+#exec_always --no-startup-id bash -c "while true; do ~/bin/battery_notify.sh; sleep 60; done"
+
+# =========================
+# KDE PowerDevil (i3)
+# =========================
+exec --no-startup-id dbus-update-activation-environment --systemd DISPLAY XAUTHORITY
+exec --no-startup-id kded5
+exec --no-startup-id /usr/lib/x86_64-linux-gnu/libexec/org_kde_powerdevil
+
+# Notifications
+exec --no-startup-id dunst
+
 #PICOM
 exec_always --no-startup-id picom --config ~/.config/picom/picom.conf --daemon
 
@@ -30,8 +40,8 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 # ========================
 # BRIGHTNESS (brightnessctl)
 # ========================
-bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +10%
-bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 10%-
+bindsym XF86MonBrightnessUp exec --no-startup-id sudo brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec --no-startup-id sudo brightnessctl set 5%-
 
 # =========================
 # WINDOW BEHAVIOR
@@ -243,4 +253,3 @@ for_window [class="mpv"] move position center
 # Telegram floating on left
 # =========================
 for_window [class="TelegramDesktop"] floating enable, move position 16 12, resize set 900 1000
-
