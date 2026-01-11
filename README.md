@@ -71,7 +71,7 @@ which betterlockscreen
 echo 'export PATH=$PATH:/usr/local/bin' >> ~/.bashrc
 source ~/.bashrc
 ```
-## 🚨 STEP 3: Why Betterlockscreen Failed Initially
+## 🚨 STEP 3: checking
 ### Running:
 ```bash
 betterlockscreen -l
