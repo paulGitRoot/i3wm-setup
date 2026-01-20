@@ -17,11 +17,10 @@ exec --no-startup-id nm-applet
 #exec_always --no-startup-id bash -c "while true; do ~/bin/battery_notify.sh; sleep 60; done"
 
 # =========================
-# KDE PowerDevil (i3)
+# Battery Notifications (KDE-like, no PowerDevil)
 # =========================
-exec --no-startup-id dbus-update-activation-environment --systemd DISPLAY XAUTHORITY
-exec --no-startup-id kded5
-exec --no-startup-id /usr/lib/x86_64-linux-gnu/libexec/org_kde_powerdevil
+exec_always --no-startup-id bash -c 'while true; do ~/bin/battery_notify.sh; sleep 60; done'
+
 
 # Notifications
 exec --no-startup-id dunst
@@ -40,8 +39,8 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 # ========================
 # BRIGHTNESS (brightnessctl)
 # ========================
-bindsym XF86MonBrightnessUp exec --no-startup-id sudo brightnessctl set +5%
-bindsym XF86MonBrightnessDown exec --no-startup-id sudo brightnessctl set 5%-
+bindsym XF86MonBrightnessUp exec --no-startup-id sudo brightnessctl set +2%
+bindsym XF86MonBrightnessDown exec --no-startup-id sudo brightnessctl set 2%-
 
 # =========================
 # WINDOW BEHAVIOR
