@@ -13,8 +13,25 @@ font pango:Iosevka Bold 12
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id xss-lock --transfer-sleep-lock -- betterlockscreen -l
 exec --no-startup-id nm-applet
-# Battery notifications
-#exec_always --no-startup-id bash -c "while true; do ~/bin/battery_notify.sh; sleep 60; done"
+
+# =========================
+# Disable Xorg screen blanking & DPMS
+# =========================
+exec --no-startup-id xset s off
+exec --no-startup-id xset s noblank
+exec --no-startup-id xset -dpms
+
+# Smart idle management (media-aware)
+exec_always --no-startup-id xautolock \
+  -time 60 \
+  -locker "loginctl lock-session" \
+  -notify 30 \
+  -notifier "dunstify -u low 'Idle warning' 'Locking in 30 seconds'" \
+  -detectsleep \
+  -corners ---- \
+  -noclose \
+  -nowlocker \
+  -killer "/home/paul/bin/media_idle.sh"
 
 # =========================
 # Battery Notifications (KDE-like, no PowerDevil)
@@ -55,7 +72,8 @@ bindsym $mod+Return exec $term
 bindsym $mod+q kill
 
 # Lock the screen
-bindsym $mod+l exec --no-startup-id i3lock-fancy
+bindsym $mod+l exec --no-startup-id betterlockscreen -l
+#bindsym $mod+l exec --no-startup-id i3lock-fancy
 
 bindsym $mod+d exec --no-startup-id rofi -show drun -window-title "run"
 # prime-run is NVIDIA-only; keep but make it safe
@@ -219,11 +237,9 @@ workspace 5 gaps inner 10
 # XFCE / MINT SERVICES
 # =========================
 exec --no-startup-id xfsettingsd --sm-client-disable
-exec --no-startup-id xfce4-power-manager
 exec --no-startup-id xfce4-clipman
 exec --no-startup-id dunst
 exec --no-startup-id thunar --daemon
-exec --no-startup-id xfce4-volumed
 exec --no-startup-id fcitx -d
 
 # =========================
