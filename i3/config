@@ -1,3 +1,7 @@
+#=================================================================================
+#I INSTALLED bluetui AND impala-nm FROM CARGO INSTALL CARGO FIRST THEN INSTALL THEM
+#=================================================================================
+
 # =========================
 # VARIABLES
 # =========================
@@ -5,14 +9,15 @@ set $mod Mod4
 set $term kitty
 
 font pango:Iosevka Bold 12
-#font pango:JetBrains Mono Nerd Font Bold 11
 
 # =========================
 # AUTOSTART
 # =========================
 exec --no-startup-id dex --autostart --environment i3
-exec --no-startup-id xss-lock --transfer-sleep-lock -- betterlockscreen -l
-exec --no-startup-id nm-applet
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork -i ~/Pictures/mainWallpaper.png
+#exec --no-startup-id nm-applet
+# Polkit authentication agent
+exec --no-startup-id while true; do ~/.config/scripts/battery-notify.sh; sleep 60; done
 
 # =========================
 # Disable Xorg screen blanking & DPMS
@@ -21,43 +26,26 @@ exec --no-startup-id xset s off
 exec --no-startup-id xset s noblank
 exec --no-startup-id xset -dpms
 
-# Smart idle management (media-aware)
-exec_always --no-startup-id xautolock \
-  -time 60 \
-  -locker "loginctl lock-session" \
-  -notify 30 \
-  -notifier "dunstify -u low 'Idle warning' 'Locking in 30 seconds'" \
-  -detectsleep \
-  -corners ---- \
-  -noclose \
-  -nowlocker \
-  -killer "/home/paul/bin/media_idle.sh"
-
 # =========================
-# Battery Notifications (KDE-like, no PowerDevil)
-# =========================
-exec_always --no-startup-id bash -c 'while true; do ~/bin/battery_notify.sh; sleep 60; done'
-
-
-# Notifications
-exec --no-startup-id dunst
-
-#PICOM
-exec_always --no-startup-id picom --config ~/.config/picom/picom.conf --daemon
-
-# =========================
-# AUDIO (PulseAudio)
+# AUDIO (PipeWire)
 # =========================
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
+# Direct Wi-Fi launcher
+bindsym $mod+n exec --no-startup-id kitty -e impala-nm
+
+# Direct Bluetooth launcher
+bindsym $mod+b exec --no-startup-id kitty --title bluetui -e bluetui
+
 # ========================
-# BRIGHTNESS (brightnessctl)
+# BRIGHTNESS
 # ========================
-bindsym XF86MonBrightnessUp exec --no-startup-id sudo brightnessctl set +2%
-bindsym XF86MonBrightnessDown exec --no-startup-id sudo brightnessctl set 2%-
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +2%
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 2%-
 
 # =========================
 # WINDOW BEHAVIOR
@@ -71,15 +59,16 @@ tiling_drag modifier titlebar
 bindsym $mod+Return exec $term
 bindsym $mod+q kill
 
-# Lock the screen
-bindsym $mod+l exec --no-startup-id betterlockscreen -l
-#bindsym $mod+l exec --no-startup-id i3lock-fancy
+# Lock screen with i3lock
+bindsym $mod+l exec --no-startup-id i3lock --nofork -i ~/Pictures/mainWallpaper.png
 
+# Application launcher
 bindsym $mod+d exec --no-startup-id rofi -show drun -window-title "run"
-# prime-run is NVIDIA-only; keep but make it safe
+
+# Prime-run launcher (for NVIDIA)
 bindsym $mod+Shift+d exec --no-startup-id bash -c "command -v prime-run && prime-run rofi -show combi || rofi -show combi"
 
-# Focus
+# Focus (your keybindings)
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
@@ -97,7 +86,6 @@ bindsym $mod+v split v
 
 # Layout
 bindsym $mod+f fullscreen toggle
-#bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+s layout toggle split
 
@@ -145,17 +133,12 @@ bindsym $mod+Shift+0 move container to workspace number $ws10
 # =========================
 # SYSTEM
 # =========================
-#bindsym $mod+Shift+c reload
 bindsym $mod+Shift+c restart
-#bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit i3?' -B 'Yes' 'i3-msg exit'"
-# Logout
-bindsym $mod+Shift+e exec --no-startup-id i3-msg exit
-# Reboot
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit i3?' -B 'Yes' 'i3-msg exit'"
 bindsym $mod+Shift+r exec --no-startup-id systemctl reboot
-# Shutdown
 bindsym $mod+Shift+u exec --no-startup-id systemctl poweroff
 
-#FILE MANAGER 
+# File manager
 bindsym $mod+e exec --no-startup-id nemo
 
 # =========================
@@ -174,7 +157,7 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # =========================
-# SPECIAL MODE
+# SPECIAL MODE (screenshot)
 # =========================
 mode "special" {
     bindsym s exec scrot -s
@@ -189,42 +172,43 @@ bindsym $mod+z mode "special"
 client.focused          #9b8d7f #9b8d7f #000000 #9b8d7f #9b8d7f
 client.focused_inactive #222222 #222222 #9b8d7f #222222 #222222
 client.unfocused        #222222 #222222 #9b8d7f #222222 #222222
+
 # =========================
 # Thin title bars and borders
 # =========================
 default_border pixel 1
 default_floating_border pixel 1
 
-# Font for window titles (affects title bar height)
+# Font for window titles
 font pango:JetBrains Mono Nerd Font Bold 10
 
 # Make all windows 1px border
 for_window [class=".*"] border pixel 1
 
-
 # =========================
 # BAR
 # =========================
-bar {
-    status_command i3blocks
-    position top
-    separator_symbol "::"
-
-    colors {
-        background #222222
-        statusline #9b8d7f
-        separator  #9b8d7f
-
-        focused_workspace  #9b8d7f #9b8d7f #222222
-        inactive_workspace #222222 #222222 #9b8d7f
-        active_workspace   #222222 #222222 #9b8d7f
-        urgent_workspace   #222222 #222222 #9b8d7f
-        binding_mode       #222222 #222222 #9b8d7f
-    }
-
-    font pango:JetBrains Mono Nerd Font Bold 10
-    tray_output primary
-}
+exec_always --no-startup-id ~/.config/polybar/launch.sh
+#bar {
+#    status_command i3blocks
+#    position top
+#    separator_symbol "::"
+#
+#    colors {
+#        background #222222
+#        statusline #9b8d7f
+#        separator  #9b8d7f
+#
+#        focused_workspace  #9b8d7f #9b8d7f #222222
+#        inactive_workspace #222222 #222222 #9b8d7f
+#        active_workspace   #222222 #222222 #9b8d7f
+#        urgent_workspace   #222222 #222222 #9b8d7f
+#        binding_mode       #222222 #222222 #9b8d7f
+#    }
+#
+#    font pango:JetBrains Mono Nerd Font Bold 11.5
+#    tray_output primary
+#}
 
 # =========================
 # GAPS
@@ -234,9 +218,10 @@ workspace 5 gaps vertical 50
 workspace 5 gaps inner 10
 
 # =========================
-# XFCE / MINT SERVICES
+# XFCE SERVICES
 # =========================
 exec --no-startup-id xfsettingsd --sm-client-disable
+#exec --no-startup-id xfce4-power-manager
 exec --no-startup-id xfce4-clipman
 exec --no-startup-id dunst
 exec --no-startup-id thunar --daemon
@@ -245,18 +230,18 @@ exec --no-startup-id fcitx -d
 # =========================
 # VISUALS
 # =========================
-exec_always --no-startup-id nitrogen --restore
+# Set wallpaper with feh (update the path to your actual wallpaper)
+exec_always --no-startup-id feh --bg-scale ~/Pictures/mainWallpaper.jpg
+
+# Compositor for transparency and shadows
 exec_always --no-startup-id picom --daemon --no-frame-pacing
+#exec --no-startup-id picom --backend glx --vsync
+
 # =========================
 # FLOATING WINDOWS
 # =========================
 
-# File manager (Nemo)
-#for_window [class="Nemo"] floating enable
-#for_window [class="Nemo"] resize set width 1200 px height 800 px
-#for_window [class="Nemo"] move position center
-
-# Bluetooth (Blueman Manager)
+# Bluetooth (Blueman-manager)
 for_window [class="Blueman-manager"] floating enable
 for_window [class="Blueman-manager"] move position center
 for_window [class="Blueman-manager"] resize set width 200 px height 400 px
@@ -264,7 +249,13 @@ for_window [class="Blueman-manager"] resize set width 200 px height 400 px
 # Media player (mpv)
 for_window [class="mpv"] floating enable
 for_window [class="mpv"] move position center
-# =========================
+
 # Telegram floating on left
-# =========================
 for_window [class="TelegramDesktop"] floating enable, move position 16 12, resize set 900 1000
+
+# Network Manager Applet (if it opens dialogs)
+for_window [class="nm-applet"] floating enable
+
+for_window [class="kitty"] floating enable, move position center, resize set 900 600
+for_window [title="impala-nm"] floating enable, move position center, resize set 700 500
+for_window [title="bluetui"] floating enable, move position center, resize set 700 500

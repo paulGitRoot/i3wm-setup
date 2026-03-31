@@ -1,22 +1,21 @@
 ############################
 # DUNST CONFIGURATION
-# Dark Brown i3wm Aesthetic
-# Modern, working for dunst >=1.8
+# Dark Minimal GNU/Linux Theme
 ############################
 
 [global]
 font = JetBrainsMono Nerd Font 10
 
-corner_radius = 10
+corner_radius = 12
 padding = 12
 horizontal_padding = 12
 frame_width = 2
 separator_height = 2
-separator_color = "#3b2a1a"
-transparency = 5
+separator_color = "#2a2f33"
+transparency = 8
 
 markup = full
-format = "<b>%s</b>\n%b"
+format = "%i <b>%s</b>\n%b"
 
 alignment = left
 vertical_alignment = center
@@ -39,8 +38,6 @@ mouse_left_click = do_action
 mouse_middle_click = close_current
 mouse_right_click = close_all
 
-#fade = yes
-
 idle_threshold = 120
 show_age_threshold = 60
 
@@ -50,21 +47,21 @@ show_age_threshold = 60
 ############################
 
 [urgency_low]
-background = "#1e140c"
-foreground = "#e6d5c3"
-frame_color = "#3b2a1a"
+background = "#1b1f22"
+foreground = "#d8d3c4"
+frame_color = "#2a2f33"
 timeout = 4
 
 [urgency_normal]
-background = "#2a1b12"
-foreground = "#e6d5c3"
-frame_color = "#7a4a2e"
+background = "#1f2428"
+foreground = "#d8d3c4"
+frame_color = "#5f7a86"
 timeout = 6
 
 [urgency_critical]
-background = "#3a1a12"
-foreground = "#f5c2c7"
-frame_color = "#b23a2e"
+background = "#2a1f1f"
+foreground = "#f2c6c6"
+frame_color = "#c25a5a"
 timeout = 0
 
 
@@ -72,40 +69,40 @@ timeout = 0
 # RULES
 ############################
 
-# 🔋 Battery – Low (≤10%)
+# 🔋 Battery – Low
 [battery_low]
 summary = "Battery Low"
 urgency = normal
-background = "#2a1b12"
-foreground = "#e6d5c3"
-frame_color = "#7a4a2e"
+background = "#1f2428"
+foreground = "#d8d3c4"
+frame_color = "#ff8800"
 timeout = 6
 
-# 🚨 Battery – Critical (≤5%)
+# 🚨 Battery – Critical
 [battery_critical]
 summary = "Battery Critical"
 urgency = critical
-background = "#3a1a12"
-foreground = "#f5c2c7"
-frame_color = "#b23a2e"
+background = "#2a1f1f"
+foreground = "#f2c6c6"
+frame_color = "#ff4444"
 timeout = 0
 
 # 🌐 Network Connected
 [network_connected]
 appname = "NetworkManager"
 summary = "*connected*"
-background = "#1f2a1a"
-foreground = "#d7f0c2"
-frame_color = "#5a7a4e"
+background = "#1b2226"
+foreground = "#cfe8f3"
+frame_color = "#5f7a86"
 timeout = 4
 
 # 🔵 Bluetooth Connected
 [bluetooth_connected]
 appname = "blueman"
 summary = "*Connected*"
-background = "#1a232a"
-foreground = "#cdd6f4"
-frame_color = "#4a5a7a"
+background = "#1b2226"
+foreground = "#cfe8f3"
+frame_color = "#5f7a86"
 timeout = 4
 
 
@@ -114,8 +111,7 @@ timeout = 4
 ############################
 
 [default]
-background = "#1e140c"
-foreground = "#e6d5c3"
-frame_color = "#3b2a1a"
+background = "#1b1f22"
+foreground = "#d8d3c4"
+frame_color = "#2a2f33"
 timeout = 5
-
