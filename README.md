@@ -61,7 +61,7 @@ fi
 
 cd ~
 ```
-##copying the config files
+## copying the config files
 ```bash
 echo "📁 Copying configs..."
 
