@@ -1,165 +1,148 @@
-# My i3wm Rice Setup (Full Lock & Power Working Guide)
+🧩 My i3wm + Polybar Setup (Linux Mint / Ubuntu)
 
-This repository documents my **fully working i3wm setup** on Linux Mint / Ubuntu-based systems, including the **exact steps required to make Betterlockscreen actually work**.
+This repository documents my fully working i3wm rice setup using Polybar, custom scripts, and a minimal locking setup.
 
-This is not a theoretical guide — it reflects the **real troubleshooting and fixes** needed after a clean OS install.
+This is a real-world tested setup, not theoretical — everything here reflects what actually works after a clean install.
 
----
-
-## 🧩 What This Setup Includes
-
-- i3 Window Manager
-- Betterlockscreen (works after suspend/hibernate)
-- i3lock-color (required by betterlockscreen)
-- Optional i3lock-fancy support
-- i3blocks status bar
-- Picom compositor
-- Brightness & volume key support
-- Power management (sleep, lid, brightness)
-- Wallpaper support (desktop + lockscreen)
-
----
-
-## 💻 Base System Requirements
-
-- Linux Mint / Ubuntu-based distro
-- X11 session (**Wayland not supported**)
-- sudo privileges
-- Internet access
-
----
-
-## 📦 STEP 1: Install Base Runtime Packages
-
-These packages are **required even before touching Betterlockscreen**:
-
-```bash
+✨ What This Setup Includes
+i3 Window Manager (X11)
+Polybar (custom modules + scripts)
+i3lock (simple lock system)
+xss-lock (auto lock on suspend/lid close)
+Picom compositor
+Dunst notifications (custom themed)
+Custom battery / network / bluetooth modules
+Rofi launcher
+Alacritty terminal
+Brightness & volume key support
+💻 Requirements
+Linux Mint / Ubuntu-based distro
+X11 session (Wayland not supported)
+sudo privileges
+Internet connection
+📦 STEP 1: Install Core Packages
 sudo apt update
 sudo apt install -y \
-i3lock imagemagick xss-lock \
-feh scrot dunst nm-applet dex \
-i3blocks picom \
-powerdevil kded5 plasma-workspace libnotify-bin \
-brightnessctl
-```
-## 🔐 STEP 2: Install Betterlockscreen (Manual Method – WORKING)
+i3 i3lock xss-lock \
+feh scrot dunst libnotify-bin \
+rofi alacritty \
+picom \
+nm-applet network-manager \
+brightnessctl acpi \
+git curl wget \
+fonts-jetbrains-mono \
+papirus-icon-theme
+🧱 STEP 2: Install Polybar
+sudo apt install polybar
+🎨 STEP 3: Fonts & Icons (IMPORTANT)
 
-This is the exact method that worked reliably after a clean install.
-```bash
-cd ~/Downloads
-git clone https://github.com/pavanjadhaw/betterlockscreen.git
-cd betterlockscreen
-sudo make install
-```
-Verify files:
-```bash
-ls -l ~/Downloads/betterlockscreen
-```
-### Manually install the binary (important):
-```bash
-sudo cp ~/Downloads/betterlockscreen/betterlockscreen /usr/local/bin/
-sudo chmod +x /usr/local/bin/betterlockscreen
-```
-### Verify installation:
-```bash
-which betterlockscreen
-# Expected output:
-# /usr/local/bin/betterlockscreen
-```
-### Add /usr/local/bin to PATH permanently:
-```bash
-echo 'export PATH=$PATH:/usr/local/bin' >> ~/.bashrc
-source ~/.bashrc
-```
-## 🚨 STEP 3: checking
-### Running:
-```bash
-betterlockscreen -l
-```
-## 🧱 STEP 4: Install Build Dependencies for i3lock-color
-```bash
-sudo apt install -y \
-build-essential autoconf pkg-config \
-libx11-dev libxinerama-dev libxrandr-dev \
-libxcb1-dev libxcb-xkb-dev libxcb-randr0-dev \
-libxcb-keysyms1-dev libev-dev libpam0g-dev \
-libcairo2-dev libfontconfig1-dev \
-libxcb-composite0-dev libxcb-image0-dev \
-libxcb-util0-dev libxcb-xrm-dev \
-libx11-xcb-dev libxkbcommon-dev \
-libxkbcommon-x11-dev libxcb-xinerama0-dev \
-libjpeg-dev libgif-dev
-```
-## 🔨 STEP 5: Build & Install i3lock-color (REQUIRED)
-```bash
-cd ~/Downloads
-git clone https://github.com/Raymo111/i3lock-color.git
-cd i3lock-color
-sudo ./install-i3lock-color.sh
-```
-### Ensure compatibility (important):
-```bash
-sudo ln -s /usr/bin/i3lock /usr/bin/i3lock-color
-```
-### Verify:
-```bash
-i3lock --version
-```
-## 🔐 STEP 6: Final Betterlockscreen Setup
+Make sure you have:
 
-### Set wallpaper and generate lockscreen assets:
-```bash
-betterlockscreen -u ~/Pictures/my-wallpaper.jpg --blur 5 --dim 30
-```
-### Test lockscreen:
-```bash
-betterlockscreen -l
-```
-## 💤 STEP 7: Lock After Suspend / Hibernate (CRITICAL)
-### Add this to your i3 config:
-```bash
-exec --no-startup-id xss-lock --transfer-sleep-lock -- betterlockscreen -l
-```
-### This ensures locking after:
+JetBrainsMono Nerd Font (for icons)
+Papirus-Dark icon theme
 
-Suspend
+If Nerd Font icons are missing:
 
-Hibernate
+mkdir -p ~/.local/share/fonts
+cd ~/.local/share/fonts
 
-Laptop lid close
-### 🖥️ Picom (Compositor)
-```bash 
+# Download Nerd Font (JetBrainsMono)
+wget https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
+unzip JetBrainsMono.zip
+fc-cache -fv
+🔔 STEP 4: Dunst (Notifications)
+
+Enable dunst in i3:
+
+exec --no-startup-id dunst
+
+Test:
+
+notify-send -i dialog-information "Test" "Notifications working"
+🔒 STEP 5: Lock Screen (Simple & Working)
+
+No more betterlockscreen — using i3lock + xss-lock.
+
+Add to i3 config:
+
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock -i ~/Pictures/mainWallpaper.png
+
+Manual lock:
+
+bindsym $mod+l exec --no-startup-id i3lock -i ~/Pictures/mainWallpaper.png
+🖥️ STEP 6: Picom (Compositor)
 exec_always --no-startup-id picom --config ~/.config/picom/picom.conf --daemon
-```
-### 📊 i3blocks Status Bar
-```bash
-bar {
-    status_command i3blocks
-}
-```
-### Config file location:
-```bash
-~/.config/i3blocks/config
-```
-## 🔆 STEP 8: Fix Brightness Keys After Reinstall
-### Allow brightness control without password:
-```bash
+📊 STEP 7: Polybar Setup
+
+Enable Polybar in i3:
+
+exec_always --no-startup-id polybar top
+🔧 Custom Modules (IMPORTANT)
+
+This setup uses custom scripts instead of built-in modules.
+
+Example Modules
+[module/bluetooth]
+type = custom/text
+content = ""
+click-left = ~/.config/scripts/toggle-bluetooth.sh
+
+[module/network]
+type = custom/text
+content = ""
+click-left = ~/.config/scripts/toggle-network.sh
+
+[module/battery]
+type = custom/script
+exec = ~/.config/scripts/battery.sh
+interval = 5
+⚠️ IMPORTANT NOTE
+
+After creating scripts:
+
+chmod +x ~/.config/scripts/*.sh
+
+If you forget this → nothing will work.
+
+🔋 Battery Script Features
+Icon changes based on battery level
+Colors:
+🟢 60–100 → Green
+🟠 25–59 → Orange
+🔴 <25 → Red
+📡 Toggle Scripts (Network / Bluetooth)
+
+Scripts allow:
+
+Click → open manager (impala-nm / bluetui)
+Click again → close them
+⚡ STEP 8: Brightness Keys Fix
+
+Allow brightness without password:
+
 sudo visudo
-```
-### Add:
-```bash
+
+Add:
+
 paul ALL=(ALL) NOPASSWD: /usr/bin/brightnessctl
-```
-### i3 keybindings:
-```bash
-bindsym XF86MonBrightnessUp exec --no-startup-id sudo brightnessctl set +10%
-bindsym XF86MonBrightnessDown exec --no-startup-id sudo brightnessctl set 10%-
-```
-### ⚡ Recommended i3 Autostart Services
-```bash
+
+Keybindings:
+
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +10%
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 10%-
+🚀 Recommended i3 Autostart
 exec --no-startup-id nm-applet
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id dunst
 exec --no-startup-id xfsettingsd --sm-client-disable
 exec --no-startup-id xfce4-power-manager
-```
+🧠 Notes
+This setup is script-driven, not default modules
+Polybar replaces i3blocks completely
+Terminal apps (like bluetui / impala-nm) run inside Alacritty/Kitty
+Floating rules are handled in i3 config
+📁 Important Paths
+~/.config/i3/config
+~/.config/polybar/config.ini
+~/.config/scripts/
+~/.config/dunst/dunstrc
