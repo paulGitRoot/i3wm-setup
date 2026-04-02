@@ -25,4 +25,4 @@ if [ "$status" = "Charging" ]; then
     icon=""
 fi
 
-echo "%{F$color}$icon $battery%%%{F-}"
+echo "%{F$color}$icon $battery%%{F-}"
