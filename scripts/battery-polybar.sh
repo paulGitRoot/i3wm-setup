@@ -13,16 +13,12 @@ fi
 
 # ⚡ Charging override (highest priority)
 if [ "$status" = "Charging" ]; then
-    color="#a020f0"   # purple
+    color="#009900"   # purple
     icon=""
 
-# 🤍 Above 85% (not charging)
-elif [ "$battery" -ge 85 ]; then
-    color="#ffffff"   # white
-
-# 🟢 Normal ranges
+# 🤍 Above 60% (not charging)
 elif [ "$battery" -ge 60 ]; then
-    color="#00ff00"   # green
+    color="#ffffff"   # white
 
 # 🟠 Medium
 elif [ "$battery" -ge 25 ]; then
