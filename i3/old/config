@@ -1,5 +1,5 @@
 #=================================================================================
-#I INSTALLED bluetui AND impala-nm FROM CARGO, INSTALL CARGO FIRST THEN INSTALL THEM
+#I INSTALLED bluetui AND impala-nm FROM CARGO INSTALL CARGO FIRST THEN INSTALL THEM
 #=================================================================================
 
 # =========================
@@ -14,7 +14,7 @@ font pango:Iosevka Bold 12
 # AUTOSTART
 # =========================
 exec --no-startup-id dex --autostart --environment i3
-#exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork -i ~/Pictures/mainWallpaper.png
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork -i ~/Pictures/mainWallpaper.png
 #exec --no-startup-id nm-applet
 # Polkit authentication agent
 exec --no-startup-id while true; do ~/.config/scripts/battery-notify.sh; sleep 60; done
@@ -22,7 +22,9 @@ exec --no-startup-id while true; do ~/.config/scripts/battery-notify.sh; sleep 6
 # =========================
 # Disable Xorg screen blanking & DPMS
 # =========================
-exec --no-startup-id sh -c "sleep 2 && xset s off && xset s noblank && xset -dpms"
+exec --no-startup-id xset s off
+exec --no-startup-id xset s noblank
+exec --no-startup-id xset -dpms
 
 # =========================
 # AUDIO (PipeWire)
@@ -257,9 +259,3 @@ for_window [class="nm-applet"] floating enable
 for_window [class="kitty"] floating enable, move position center, resize set 900 600
 for_window [title="impala-nm"] floating enable, move position center , resize set 700 500
 for_window [title="bluetui"] floating enable, move position center, resize set 700 500
-
-# Calculator
-for_window [class="Gnome-calculator"] floating enable, move position center, resize set 400 500
-
-#pop-up
-for_window [title="Sign in - Google Accounts"] floating enable, resize set 500 600, move position center
